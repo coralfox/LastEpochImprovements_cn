@@ -1,4 +1,5 @@
-﻿using Il2CppDMM;
+﻿using System.ComponentModel;
+using Il2CppDMM;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppItemFiltering;
 using Il2CppLE.UI;
@@ -6,7 +7,7 @@ using Il2CppTMPro;
 using MelonLoader;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(kg_LastEpoch_Improvements.kg_LastEpoch_Improvements), "kg.LastEpoch.Improvements", "1.3.5", "KG", "https://www.nexusmods.com/lastepoch/mods/8")]
+[assembly: MelonInfo(typeof(kg_LastEpoch_Improvements.kg_LastEpoch_Improvements), "kg.LastEpoch.Improvements", "1.3.5-cn", "KG", "https://www.nexusmods.com/lastepoch/mods/8")]
 
 namespace kg_LastEpoch_Improvements;
 
@@ -24,9 +25,28 @@ public class kg_LastEpoch_Improvements : MelonMod
     private static MelonPreferences_Entry<bool> AutoStoreCraftMaterials;
     private static GameObject CustomMapIcon;
 
-    private enum DisplayAffixType { None, Old_Style, New_Style, Letter_Style };
-    public enum DisplayAffixType_GroundLabel { None, Without_Tier, Without_Tier_Filter_Only, With_Tier, With_Tier_Filter_Only, Letter_Without_Tier, Letter_Without_Tier_Filter_Only, Letter_With_Tier, Letter_With_Tier_Filter_Only }
-
+    private enum DisplayAffixType { [Description("关闭")] None,[Description("旧样式")] Old_Style,[Description("新样式")] New_Style,[Description("分级样式")] Letter_Style };
+   public enum DisplayAffixType_GroundLabel
+{
+    [Description("关闭")]
+    None,
+    [Description("无T等级")]
+    Without_Tier,
+    [Description("无T等级,仅限过滤")]
+    Without_Tier_Filter_Only,
+    [Description("带T等级")]
+    With_Tier,
+    [Description("带T等级,仅限过滤")]
+    With_Tier_Filter_Only,
+    [Description("分级,不带T等级")]
+    Letter_Without_Tier,
+    [Description("分级,不带T等级,仅限过滤")]
+    Letter_Without_Tier_Filter_Only,
+    [Description("分级,带T等级")]
+    Letter_With_Tier,
+    [Description("分级,带T等级,仅限过滤")]
+    Letter_With_Tier_Filter_Only
+}
     private static void CreateCustomMapIcon() 
     {
         ClassInjector.RegisterTypeInIl2Cpp<CustomIconProcessor>();
@@ -61,13 +81,13 @@ public class kg_LastEpoch_Improvements : MelonMod
     {
         _thistype = this;
         ImprovementsModCategory = MelonPreferences.CreateCategory("kg_Improvements");
-        ShowAll = ImprovementsModCategory.CreateEntry("Show Override", false, "Show Override", "Show each filter rule on map");
-        AffixShowRoll = ImprovementsModCategory.CreateEntry("Show Affix Roll New", DisplayAffixType.None, "Show Affix Roll New", "Show each affix roll on item");
-        ShowAffixOnLabel = ImprovementsModCategory.CreateEntry("Show Affix On Label", DisplayAffixType_GroundLabel.None, "Show Affix On Label Type", "Show each affix roll on item label (ground)");
-        AutoStoreCraftMaterials = ImprovementsModCategory.CreateEntry("AutoStoreCraftMaterials", false, "Auto storage craft materials", "Automatic storage of craft materials from the inventory");
+        ShowAll = ImprovementsModCategory.CreateEntry("Show Override", false, "覆盖显示", "地图上会显示所有过滤规则对应的物品图标，而不仅仅是强调显示的规则。");
+        AffixShowRoll = ImprovementsModCategory.CreateEntry("Show Affix Roll New", DisplayAffixType.None, "装备词条增强显示", "装备属性的每个词条最后,会显示Roll值比例等信息");
+        ShowAffixOnLabel = ImprovementsModCategory.CreateEntry("Show Affix On Label", DisplayAffixType_GroundLabel.None, "装备标签(地面)增强显示", "掉落在地上的装备,会在其标签最后提示Roll值比例等信息");
+        AutoStoreCraftMaterials = ImprovementsModCategory.CreateEntry("AutoStoreCraftMaterials", false, "可制作材料自动转移", "自动存储背包中的词缀碎片等工艺材料");
 #if CHEATVERSION
-        Cheat_FogOfWar = ImprovementsModCategory.CreateEntry("Fog fo war", false, "Clear fog on map on start", "Clear fog of war when you 1th enter on map");
-        Cheat_EnhancedCamera = ImprovementsModCategory.CreateEntry("Enhanced Camera", false, "Enhanced camera", "Enhanced camera angles and zoom");
+        Cheat_FogOfWar = ImprovementsModCategory.CreateEntry("Fog fo war", false, "清除地图迷雾", "当你第一次进入地图时自动清除战争迷雾");
+        Cheat_EnhancedCamera = ImprovementsModCategory.CreateEntry("Enhanced Camera", false, "增强镜头", "增强镜头角度和缩放");
 #endif
         ImprovementsModCategory.SetFilePath("UserData/kg_LastEpoch_Improvements.cfg", autoload: true);
         CreateCustomMapIcon();
@@ -285,36 +305,36 @@ public class kg_LastEpoch_Improvements : MelonMod
     {
         private static void Postfix(SettingsPanelTabNavigable __instance)
         {
-            const string CategoryName = "KG Improvements";
+            const string CategoryName = "KG Improvements -- KG 优化模组";
 #if CHEATVERSION
-            __instance.CreateNewOption(CategoryName, "<color=green>[Cheat] Clear fog on map on start</color>", Cheat_FogOfWar, (tf) =>
+            __instance.CreateNewOption(CategoryName, "<color=green>[作弊] 清除地图迷雾[首次进入地图]</color>", Cheat_FogOfWar, (tf) =>
             {
                 Cheat_FogOfWar.Value = tf;
                 ImprovementsModCategory.SaveToFile();
             });
-            __instance.CreateNewOption(CategoryName, "<color=green>[Cheat] Enhanced camera</color>", Cheat_EnhancedCamera, (tf) =>
+            __instance.CreateNewOption(CategoryName, "<color=green>[作弊] 增强镜头</color>", Cheat_EnhancedCamera, (tf) =>
             {
                 Cheat_EnhancedCamera.Value = tf;
                 ImprovementsModCategory.SaveToFile(); 
                 CameraManager_Start_Patch.Switch();
             });
 #endif
-            __instance.CreateNewOption_EnumDropdown(CategoryName, "<color=green>Affix Show Roll (Tooltip)</color>", "Show affix roll on tooltip text", AffixShowRoll, (i) =>
+            __instance.CreateNewOption_EnumDropdown(CategoryName, "<color=green>显示Roll值(装备提示)</color>", "在装备提示的词条后,显示Roll值完美度", AffixShowRoll, (i) =>
             {
                 AffixShowRoll.Value = (DisplayAffixType)i;
                 ImprovementsModCategory.SaveToFile();
             });
-            __instance.CreateNewOption_EnumDropdown(CategoryName, "<color=green>Affix Show Roll (Ground)</color>", "Show affix roll on ground text", ShowAffixOnLabel, (i) =>
+            __instance.CreateNewOption_EnumDropdown(CategoryName, "<color=green>显示Roll值(地面装备)</color>", "在地面装备标签上,显示Roll值完美度", ShowAffixOnLabel, (i) =>
             {
                 ShowAffixOnLabel.Value = (DisplayAffixType_GroundLabel)i;
                 ImprovementsModCategory.SaveToFile();
             });
-            __instance.CreateNewOption(CategoryName, "<color=green>Map Filter Show All</color>", ShowAll, (tf) =>
+            __instance.CreateNewOption(CategoryName, "<color=green>地图上显示过滤器中所有物品</color>", ShowAll, (tf) =>
             {
                 ShowAll.Value = tf;
                 ImprovementsModCategory.SaveToFile();
             });
-            __instance.CreateNewOption(CategoryName, "<color=green>Auto storage craft materials</color>", AutoStoreCraftMaterials, (ascm) =>
+            __instance.CreateNewOption(CategoryName, "<color=green>自动存储工艺材料</color>", AutoStoreCraftMaterials, (ascm) =>
             {
                 AutoStoreCraftMaterials.Value = ascm;
                 ImprovementsModCategory.SaveToFile();

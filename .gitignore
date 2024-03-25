@@ -1,4 +1,4 @@
-﻿/kg_LastEpoch_FilterIcons_Melon/bin/
+/kg_LastEpoch_FilterIcons_Melon/bin/
 kg_LastEpoch_FilterIcons_Melon/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
 .vs/kg_LastEpoch_FilterIcons/FileContentIndex/6d0ae6d5-a33f-4c05-8cc3-88eb1b6f9b35.vsidx
 .vs/kg_LastEpoch_FilterIcons/FileContentIndex/read.lock
@@ -34,3 +34,8 @@ kg_LastEpoch_FilterIcons_Melon/obj/Release/net6.0/refint/kg_LastEpoch_FilterIcon
 /.vs/kg_LastEpoch_FilterIcons/DesignTimeBuild
 /.vs/kg_LastEpoch_FilterIcons/v17
 /.vs/ProjectEvaluation
+.history/
+kg_LastEpoch_Improvements/bin/
+kg_LastEpoch_Improvements/obj/
+截图/
+.vscode/

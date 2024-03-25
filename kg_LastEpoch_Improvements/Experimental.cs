@@ -52,9 +52,9 @@ public class Experimental
             if (itemData.isUnique() && itemData.affixes.Count == 0)
             {
                 if (itemData.weaversWill > 0)
-                    itemName += $" <color=#FF0000>[WW: {itemData.weaversWill}]</color>";
+                    itemName += $" <color=#FF0000>[WW-刮: {itemData.weaversWill}]</color>";
                 else
-                    itemName += $" <color=#FF0000>[LP: {itemData.legendaryPotential}]</color>";
+                    itemName += $" <color=#FF0000>[LP-孔: {itemData.legendaryPotential}]</color>";
             }
 
             if (itemData.affixes.Count > 0)
@@ -68,7 +68,7 @@ public class Experimental
                     string tierColor = AffixRolls.GetItemTierColor(tier);
                     string letter = AffixRolls.GetItemRollRarityLetter(roll);
                     string letterColor = AffixRolls.GetItemRollRarityColorLetter(roll);
-                    string letterTier = tier > 0 ? $"<color={tierColor}>{tier}</color>" : "";
+                    string letterTier = tier > 0 ? $"<color={tierColor}>T{tier}</color>" : "";
 
                     itemName += ShowAffixOnLabel.Value switch
                     {

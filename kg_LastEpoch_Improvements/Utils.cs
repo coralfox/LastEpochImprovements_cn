@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using HarmonyLib;
 using Il2Cpp;
@@ -15,6 +16,18 @@ namespace kg_LastEpoch_Improvements;
 
 public static class Utils
 {
+
+   public static string GetDescription(this Enum value)
+    {
+        FieldInfo field = value.GetType().GetField(value.ToString());
+
+        System.ComponentModel.DescriptionAttribute attribute
+                = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute))
+                    as DescriptionAttribute;
+
+        return attribute == null ? value.ToString() : attribute.Description;
+    }
+
     //idk why but for some weird reason IL2CPP libs doesn't allow me to use indexer in List<>. So this is a reflection workaround
     private static readonly Dictionary<Type, MethodInfo> _cachedMethods = new Dictionary<Type, MethodInfo>();
     public static T get<T>(this Il2CppSystem.Collections.Generic.List<T> list, int index)
@@ -83,7 +96,11 @@ public static class Utils
         dropdown.onValueChanged.RemoveAllListeners();
         dropdown.ClearOptions(); 
         Il2CppSystem.Collections.Generic.List<string> options = new();
-        foreach (string enumName in Enum.GetNames(typeof(T))) options.Add(enumName.Replace("_"," "));
+        // foreach (string enumName in Enum.GetNames(typeof(T))) options.Add(enumName.Replace("_"," "));
+        foreach (T enumValue in Enum.GetValues(typeof(T)))
+        {
+            options.Add(enumValue.GetDescription().Replace("_", " "));
+        }
         dropdown.AddOptions(options);
         dropdown.value = (int)(object)option.Value;
         dropdown.onValueChanged.AddListener(a);

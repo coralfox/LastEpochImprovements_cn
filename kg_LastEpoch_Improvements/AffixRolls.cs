@@ -110,11 +110,11 @@ public static class AffixRolls
     public static string GetItemRollRarityLetter(double roll)
     => roll switch
     {
-        < 50 => "F", //poor
-        < 70 => "C", //rare
-        < 80 => "B", //epic
-        < 95 => "A", //legendary
-        _ => "S" //artifact
+        < 50 => "差", //poor
+        < 70 => "中", //rare
+        < 80 => "良", //epic
+        < 95 => "优", //legendary
+        _ => "极" //artifact
     };
     public static string GetItemRollRarityColorLetter(double roll)
     => roll switch
@@ -130,7 +130,7 @@ public static class AffixRolls
     {
         double value = Math.Round(roll * 100.0, 1);
         string color = GetItemRollRarityColor(value);
-        string tierStr = tier > 0 ? $"<color={GetItemTierColor(tier)}>{tier}</color>" : "";
+        string tierStr = tier > 0 ? $"<color={GetItemTierColor(tier)}>T{tier}</color>" : "";
         string toInsert = $" <color={color}>[{value}%]</color>";
         string letterText = $"[{tierStr}<color={GetItemRollRarityColorLetter(value)}>{GetItemRollRarityLetter(value)}</color>] ";
 
